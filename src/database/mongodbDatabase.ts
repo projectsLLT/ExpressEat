@@ -1,8 +1,10 @@
 import mongoose from 'mongoose'
+import dotenv from 'dotenv'
+dotenv.config();
 
-const mongoDb=mongoose
+const mongoDb=mongoose;
 
-const mongoUri='mongodb://localhost:27017/expresseat'
+const mongoUri=process.env.Mong_URI as string;
 
 async function conectar(){
     await mongoDb.connect(mongoUri)
