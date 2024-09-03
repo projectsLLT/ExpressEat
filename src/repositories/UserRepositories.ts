@@ -1,6 +1,7 @@
 import User from "../model/User";
 import { bodyUser } from "../types/bodyUser";
-import { hash } from "bcrypt";
+import { userAutenticateType } from "../types/userAutenticateType";
+import { hash, compare } from "bcrypt";
 
 class UserRepository {
   async getAllUsers() {
@@ -71,6 +72,16 @@ class UserRepository {
     } catch (error) {
       return { message: `Erro ao deletar usuario`, status: 400, error };
     }
+  }
+  async autenticateUser({ email, senha }: userAutenticateType) {
+    try {
+      const data = await this.getUserByEmail(email);
+      if (data.usuario) {
+        const usuario = data.usuario;
+        const verifyPassword = await compare(senha, usuario.senha);
+      }
+
+    } catch (error) {}
   }
 }
 export default new UserRepository();
