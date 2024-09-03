@@ -19,7 +19,7 @@ const UserSchema= new Schema({
     idade:{
         type:Number
     },
-    localzacao:{
+    localizacao:{
         type: {
             type: String,
             enum: ['Point'], 
