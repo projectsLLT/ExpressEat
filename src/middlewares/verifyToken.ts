@@ -10,13 +10,14 @@ export async function verifyToken(req:Request,res:Response,next:NextFunction){
       }
       try {
         const [_, tokenCorrect] = token.split(' ');
-        const { _id } = verify(tokenCorrect, process.env.TOKEN_KEY as string) as payloadType;
-        req.user={_id}
+        const { id } = verify(tokenCorrect, process.env.TOKEN_KEY as string) as payloadType;
+        req.user={id}
         
+        next();
       } catch (error) {
           return res.status(401).json({message:error});
       }
     
-      next();
+     
 }
 

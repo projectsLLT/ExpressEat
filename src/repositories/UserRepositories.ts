@@ -25,13 +25,13 @@ class UserRepository {
 
   async createUser({ nome, email, idade, localizacao, senha, cpf }: bodyUserType) {
     try {
-      const senhaCripitada = await hash(senha, 2);
+      const senhaCripitografada = await hash(senha, 2);
       const usuario = await User.create({
         nome,
         email,
         idade,
         localizacao,
-        senha: senhaCripitada,
+        senha: senhaCripitografada,
         cpf,
       });
       return { usuario, status: 200 };
@@ -40,29 +40,25 @@ class UserRepository {
     }
   }
 
-  async updateUser({ nome, idade, senha, localizacao }: bodyUserType,email: string) {
+  async updateUser({ nome, idade, senha, localizacao }: bodyUserType,id: string) {
     try {
-      const data = await this.getUserByEmail(email);
-      if (data.usuario) {
-        const usuario = data.usuario;
-        const senhaCripitada = await hash(senha, 2);
-        const usuarioAtualizado = await User.findByIdAndUpdate(usuario._id, {
+        const senhaCripitografada = await hash(senha, 2);
+        const usuarioAtualizado = await User.findByIdAndUpdate(id, {
           nome,
           idade,
-          senha: senhaCripitada,
+          senha: senhaCripitografada,
           localizacao,
-        });
+        },{ new: true });
+        
         return { usuarioAtualizado, status: 200 };
-      }
-      return { message: `Usuario inexistente`, status: 404 };
     } catch (error) {
-      return { message: `Erro ao criar usuarios`, status: 400, error };
+      return { message: `Erro ao atualizar usuario`, status: 400, error };
     }
   }
 
-  async deleteUser(_id: string) {
+  async deleteUser(id: string) {
     try {
-        await User.findByIdAndDelete(_id);
+        await User.findByIdAndDelete(id);
         const usuarios = await this.getAllUsers();
         return { usuarios, status: 200 };
     } catch (error) {

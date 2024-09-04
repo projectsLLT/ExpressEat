@@ -1,5 +1,5 @@
 type Usuario = {
-    _id:string;
+    id:string;
   }
   
   declare namespace Express{
