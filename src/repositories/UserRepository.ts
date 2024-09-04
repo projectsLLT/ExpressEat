@@ -36,7 +36,7 @@ class UserRepository {
       });
       return { usuario, status: 200 };
     } catch (error) {
-      return { message: `Erro ao criar usuarios`, status: 400, error };
+      return { message: `Erro ao criar usuario`, status: 400, error };
     }
   }
 

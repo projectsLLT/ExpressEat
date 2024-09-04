@@ -5,7 +5,7 @@ import {v4 as uuid} from "uuid"
 const RestauranteSchema=new Schema({
     _id:{
         type:String,
-        default:uuid()
+        default:()=>uuid()
     },
     nome:String,
     cnpj:{

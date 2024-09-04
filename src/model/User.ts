@@ -6,7 +6,7 @@ const { Schema } = mongoose;
 const UserSchema= new Schema({
     _id:{
         type:String,
-        default:uuid()
+        default:()=>uuid()
     },
     nome:{
         type:String
