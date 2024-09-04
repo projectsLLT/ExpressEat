@@ -1,6 +1,6 @@
 import { sign } from "jsonwebtoken";
 import User from "../model/User";
-import { bodyUser } from "../types/bodyUser";
+import { bodyUserType } from "../types/bodyUserType";
 import { userAutenticateType } from "../types/userAutenticateType";
 import { hash, compare } from "bcrypt"
 
@@ -23,7 +23,7 @@ class UserRepository {
     }
   }
 
-  async createUser({ nome, email, idade, localizacao, senha, cpf }: bodyUser) {
+  async createUser({ nome, email, idade, localizacao, senha, cpf }: bodyUserType) {
     try {
       const senhaCripitada = await hash(senha, 2);
       const usuario = await User.create({
@@ -40,7 +40,7 @@ class UserRepository {
     }
   }
 
-  async updateUser({ nome, idade, senha, localizacao }: bodyUser,email: string) {
+  async updateUser({ nome, idade, senha, localizacao }: bodyUserType,email: string) {
     try {
       const data = await this.getUserByEmail(email);
       if (data.usuario) {
