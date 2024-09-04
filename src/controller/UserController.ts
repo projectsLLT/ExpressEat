@@ -1,4 +1,4 @@
-import UserRepository from "../repositories/UserRepositories";
+import UserRepository from "../repositories/UserRepository";
 import { Request, Response } from "express";
 
 class UserController {
@@ -30,9 +30,9 @@ class UserController {
 
   async editUser(req: Request, res: Response) {
     const { nome, idade, localizacao, senha } = req.body;
-    const { email } = req.params;
+    const { id } = req.user;
 
-    const result = await UserRepository.updateUser({ nome, idade, localizacao, senha },email);
+    const result = await UserRepository.updateUser({ nome, idade, localizacao, senha },id);
 
     result.status === 200
       ? res.status(200).json(result.usuarioAtualizado)
@@ -40,8 +40,8 @@ class UserController {
   }
 
   async eraseUser(req: Request, res: Response) {
-    const { email } = req.params;
-    const result = await UserRepository.deleteUser(email);
+    const {id}=req.user;
+    const result = await UserRepository.deleteUser(id);
 
     result.status === 200
       ? res.status(200).json(result.usuarios)
