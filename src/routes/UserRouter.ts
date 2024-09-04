@@ -4,6 +4,7 @@ import UserRepositories from "../repositories/UserRepositories";
 
 const UserRouter = express.Router();
 
+UserRouter.post('/login',UserController.authenticateUser)
 UserRouter.get('/',UserController.listAllUsers);
 UserRouter.get('/:email',UserController.listUserByEmail)
 UserRouter.post('/',UserController.registerUser);
