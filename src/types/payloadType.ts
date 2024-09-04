@@ -1,3 +1,3 @@
 export type payloadType={
-    _id:string
+    id:string
 }

@@ -1,23 +1,17 @@
 import mongoDb from "../database/mongodbDatabase";
-import {v4 as uuid} from 'uuid'
-import mongoose from "mongoose";
-const { Schema } = mongoose;
+import { Schema } from "mongoose";
+import {v4 as uuid} from "uuid"
 
-const UserSchema= new Schema({
+const RestauranteSchema=new Schema({
     _id:{
         type:String,
         default:()=>uuid()
     },
-    nome:{
-        type:String
-    },
-    email: {
-        type: String,
-        required: true,
-        unique: true
-    },
-    idade:{
-        type:Number
+    nome:String,
+    cnpj:{
+        type:String,
+        required:true,
+        unique:true
     },
     localizacao:{
         type: {
@@ -30,17 +24,21 @@ const UserSchema= new Schema({
             required: true,
         }
     },
+    avaliacao:{
+        type:Number,
+        min:0,
+        max:5
+    },
     senha:{
         type:String,
         required:true
     },
-    cpf:{
+    email:{
         type:String,
-        unique:true,
         required:true
     }
-});
+})
 
-const User=mongoDb.model('Usuario',UserSchema);
+const Restaurante=mongoDb.model('Restaurante',RestauranteSchema)
 
-export default User;
+export default Restaurante;
