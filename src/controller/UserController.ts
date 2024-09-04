@@ -41,7 +41,8 @@ class UserController {
 
   async eraseUser(req: Request, res: Response) {
     const { email } = req.params;
-    const result = await UserRepository.deleteUser(email);
+    const {_id}=req.user;
+    const result = await UserRepository.deleteUser(_id);
 
     result.status === 200
       ? res.status(200).json(result.usuarios)

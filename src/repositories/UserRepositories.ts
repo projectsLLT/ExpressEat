@@ -60,16 +60,11 @@ class UserRepository {
     }
   }
 
-  async deleteUser(email: string) {
+  async deleteUser(_id: string) {
     try {
-      const data = await this.getUserByEmail(email);
-      if (data.usuario) {
-        const usuario = data.usuario;
-        await User.findByIdAndDelete(usuario._id);
+        await User.findByIdAndDelete(_id);
         const usuarios = await this.getAllUsers();
         return { usuarios, status: 200 };
-      }
-      return {message:"Usuario Inexistente",status:404}
     } catch (error) {
       return { message: `Erro ao deletar usuario`, status: 400, error };
     }
