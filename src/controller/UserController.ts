@@ -23,14 +23,14 @@ class UserController {
     const { nome, email, idade, localizacao, senha, cpf } = req.body;
     const result = await UserRepository.createUser({nome,email,idade,localizacao,senha,cpf,});
 
-    result.status === 200
-      ? res.status(200).json(result.usuario)
+    result.status === 201
+      ? res.status(201).json(result.usuario)
       : res.status(result.status).json({ message: result.message, erro: result.error });
   }
 
   async editUser(req: Request, res: Response) {
     const { nome, idade, localizacao, senha } = req.body;
-    const { id } = req.user;
+    const  id  = req.ID;
 
     const result = await UserRepository.updateUser({ nome, idade, localizacao, senha },id);
 
@@ -40,7 +40,7 @@ class UserController {
   }
 
   async eraseUser(req: Request, res: Response) {
-    const {id}=req.user;
+    const id=req.ID;
     const result = await UserRepository.deleteUser(id);
 
     result.status === 200

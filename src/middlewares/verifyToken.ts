@@ -11,7 +11,7 @@ export async function verifyToken(req:Request,res:Response,next:NextFunction){
       try {
         const [_, tokenCorrect] = token.split(' ');
         const { id } = verify(tokenCorrect, process.env.TOKEN_KEY as string) as payloadType;
-        req.user={id}
+        req.ID=id
         
         next();
       } catch (error) {

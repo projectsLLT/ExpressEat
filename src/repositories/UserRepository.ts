@@ -1,7 +1,7 @@
 import { sign } from "jsonwebtoken";
 import User from "../model/User";
 import { bodyUserType } from "../types/bodyUserType";
-import { userAutenticateType } from "../types/userAutenticateType";
+import { AutenticateType } from "../types/AutenticateType";
 import { hash, compare } from "bcrypt"
 
 class UserRepository {
@@ -34,7 +34,7 @@ class UserRepository {
         senha: senhaCripitografada,
         cpf,
       });
-      return { usuario, status: 200 };
+      return { usuario, status: 201 };
     } catch (error) {
       return { message: `Erro ao criar usuario`, status: 400, error };
     }
@@ -49,8 +49,12 @@ class UserRepository {
           senha: senhaCripitografada,
           localizacao,
         },{ new: true });
+
+        if(usuarioAtualizado){
+          return { usuarioAtualizado, status: 200 };
+        }
+        return { message: `Usuario inexistente`, status: 404};
         
-        return { usuarioAtualizado, status: 200 };
     } catch (error) {
       return { message: `Erro ao atualizar usuario`, status: 400, error };
     }
@@ -58,15 +62,18 @@ class UserRepository {
 
   async deleteUser(id: string) {
     try {
-        await User.findByIdAndDelete(id);
-        const usuarios = await this.getAllUsers();
-        return { usuarios, status: 200 };
+        const usuarioDeletado=await User.findByIdAndDelete(id);
+        if(usuarioDeletado){
+          const usuarios = await this.getAllUsers();
+          return { usuarios, status: 200 };
+        }
+        return { message: `Usuario inexistente`, status: 404};
     } catch (error) {
       return { message: `Erro ao deletar usuario`, status: 400, error };
     }
   }
 
-  async authenticateUser({ email, senha }: userAutenticateType) {
+  async authenticateUser({ email, senha }: AutenticateType) {
     try {
       const data = await this.getUserByEmail(email);
       if (data.usuario) {
