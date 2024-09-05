@@ -1,4 +1,5 @@
 import Restaurante from "../model/Restaurante";
+import { AutenticateType } from "../types/AutenticateType";
 import { bodyRestauranteType } from "../types/bodyRestauranteType";
 import { hash } from "bcrypt";
 
@@ -9,6 +10,15 @@ class RestauranteRepository{
             return {restaurantes,status:200}
         } catch (error) {
             return {message:"erro ao listar restaurantes",status:400,error}
+        }
+    }
+
+    async getRestauranteByEmail(email:string){
+        try {
+            const restaurante=await Restaurante.findOne({email}).exec;
+            return {restaurante,status:200}
+        } catch (error) {
+            return {message:"erro ao listar restaurante",status:404,error}
         }
     }
 
@@ -27,6 +37,9 @@ class RestauranteRepository{
         } catch (error) {
             return {message:"erro ao criar restaurante",status:400,error}
         }
+    }
+
+    async authenticateRestaurante({email,senha}:AutenticateType){
 
     }
 }

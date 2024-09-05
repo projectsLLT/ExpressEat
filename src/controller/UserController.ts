@@ -23,8 +23,8 @@ class UserController {
     const { nome, email, idade, localizacao, senha, cpf } = req.body;
     const result = await UserRepository.createUser({nome,email,idade,localizacao,senha,cpf,});
 
-    result.status === 200
-      ? res.status(200).json(result.usuario)
+    result.status === 201
+      ? res.status(201).json(result.usuario)
       : res.status(result.status).json({ message: result.message, erro: result.error });
   }
 

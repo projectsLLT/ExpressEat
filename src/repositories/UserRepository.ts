@@ -1,7 +1,7 @@
 import { sign } from "jsonwebtoken";
 import User from "../model/User";
 import { bodyUserType } from "../types/bodyUserType";
-import { userAutenticateType } from "../types/userAutenticateType";
+import { AutenticateType } from "../types/AutenticateType";
 import { hash, compare } from "bcrypt"
 
 class UserRepository {
@@ -34,7 +34,7 @@ class UserRepository {
         senha: senhaCripitografada,
         cpf,
       });
-      return { usuario, status: 200 };
+      return { usuario, status: 201 };
     } catch (error) {
       return { message: `Erro ao criar usuario`, status: 400, error };
     }
@@ -66,7 +66,7 @@ class UserRepository {
     }
   }
 
-  async authenticateUser({ email, senha }: userAutenticateType) {
+  async authenticateUser({ email, senha }: AutenticateType) {
     try {
       const data = await this.getUserByEmail(email);
       if (data.usuario) {
