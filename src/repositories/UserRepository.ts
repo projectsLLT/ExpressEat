@@ -49,8 +49,12 @@ class UserRepository {
           senha: senhaCripitografada,
           localizacao,
         },{ new: true });
+
+        if(usuarioAtualizado){
+          return { usuarioAtualizado, status: 200 };
+        }
+        return { message: `Usuario inexistente`, status: 404};
         
-        return { usuarioAtualizado, status: 200 };
     } catch (error) {
       return { message: `Erro ao atualizar usuario`, status: 400, error };
     }
@@ -58,9 +62,12 @@ class UserRepository {
 
   async deleteUser(id: string) {
     try {
-        await User.findByIdAndDelete(id);
-        const usuarios = await this.getAllUsers();
-        return { usuarios, status: 200 };
+        const usuarioDeletado=await User.findByIdAndDelete(id);
+        if(usuarioDeletado){
+          const usuarios = await this.getAllUsers();
+          return { usuarios, status: 200 };
+        }
+        return { message: `Usuario inexistente`, status: 404};
     } catch (error) {
       return { message: `Erro ao deletar usuario`, status: 400, error };
     }
