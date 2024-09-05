@@ -17,6 +17,15 @@ class restauranteController{
         ? res.status(200).json(result.restaurante)
         : res.status(400).json({message:result.message,erro:result.error})
     }
+
+    async authenticateRestaurante(req:Request,res:Response){
+        const {email,senha}=req.body;
+        const result=await RestauranteRepository.authenticateRestaurante({email,senha});
+
+        result.status===201
+        ? res.status(200).json(result.token)
+        : res.status(400).json({message:result.message,erro:result.error})
+    }
 }
 
 export default new restauranteController();
