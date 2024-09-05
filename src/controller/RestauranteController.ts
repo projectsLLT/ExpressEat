@@ -26,6 +26,16 @@ class restauranteController{
         ? res.status(200).json(result.token)
         : res.status(400).json({message:result.message,erro:result.error})
     }
+
+    async eraseRestaurante(req:Request,res:Response){
+        const id=req.ID;
+        
+        const result=await RestauranteRepository.deleteRestaurante(id);
+
+        result.status===200
+        ? res.status(200).json(result.restaurantes)
+        : res.status(result.status).json({message:result.message,erro:result.error})
+    }
 }
 
 export default new restauranteController();

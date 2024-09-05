@@ -64,6 +64,19 @@ class RestauranteRepository{
             return {message:"erro ao criar token",status:400,error}
         }
     }
+
+    async deleteRestaurante(id:string){
+        try{
+        const restauranteDeletado=await Restaurante.findByIdAndDelete(id);
+        if(restauranteDeletado){
+            const restaurantes=await this.getAll();
+            return {restaurantes,status:restaurantes.status}
+        }
+        return {message:'Restaurante Inexistente',status:404}
+        }catch(error){
+            return {message:'erro ao deletar restaurante',status:400,error}
+        }
+    }
 }
 
 export default new RestauranteRepository();

@@ -1,9 +1,5 @@
-type Usuario = {
-    id:string;
+declare namespace Express{
+  export interface Request{
+    ID:string;
   }
-  
-  declare namespace Express{
-    export interface Request{
-      user:Usuario;
-    }
-  }
+}

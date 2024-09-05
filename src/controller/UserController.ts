@@ -30,7 +30,7 @@ class UserController {
 
   async editUser(req: Request, res: Response) {
     const { nome, idade, localizacao, senha } = req.body;
-    const { id } = req.user;
+    const  id  = req.ID;
 
     const result = await UserRepository.updateUser({ nome, idade, localizacao, senha },id);
 
@@ -40,7 +40,7 @@ class UserController {
   }
 
   async eraseUser(req: Request, res: Response) {
-    const {id}=req.user;
+    const id=req.ID;
     const result = await UserRepository.deleteUser(id);
 
     result.status === 200
