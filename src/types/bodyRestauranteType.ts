@@ -1,7 +1,7 @@
 export type bodyRestauranteType={
     nome:string,
-    cnpj:string,
+    cnpj?:string,
     localizacao:JSON,
-    email:string,
+    email?:string,
     senha:string
 }

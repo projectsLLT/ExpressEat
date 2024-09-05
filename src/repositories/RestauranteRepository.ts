@@ -77,6 +77,26 @@ class RestauranteRepository{
             return {message:'erro ao deletar restaurante',status:400,error}
         }
     }
+
+    async editRestaurante({nome,senha,localizacao}:bodyRestauranteType,id:string){
+        try {
+            const senhaCripitografada=await hash(senha,2);
+            const restauranteEditado=await Restaurante.findByIdAndUpdate(id,{
+                nome,
+                senha:senhaCripitografada,
+                localizacao
+                },
+                {new:true}
+            );
+
+            if(restauranteEditado){
+                return {restauranteEditado,status:200}
+            }
+            return {message:'Restaurante Inexistente',status:404}
+        } catch (error) {
+            return {message:'erro ao editar restaurante',status:400,error}
+        }
+    }
 }
 
 export default new RestauranteRepository();

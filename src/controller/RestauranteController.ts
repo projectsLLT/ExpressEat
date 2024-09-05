@@ -36,6 +36,16 @@ class restauranteController{
         ? res.status(200).json(result.restaurantes)
         : res.status(result.status).json({message:result.message,erro:result.error})
     }
+
+    async editRestaurante(req:Request,res:Response){
+        const id=req.ID;
+        const {nome,senha,localizacao}=req.body;
+        const result=await RestauranteRepository.editRestaurante({nome,senha,localizacao},id)
+        
+        result.status===200
+        ? res.status(200).json(result.restauranteEditado)
+        : res.status(result.status).json({message:result.message,erro:result.error})
+    }
 }
 
 export default new restauranteController();

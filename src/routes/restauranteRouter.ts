@@ -7,6 +7,7 @@ const restauranteRouter=express.Router();
 restauranteRouter.get('/',RestauranteController.listAll);
 restauranteRouter.post('/',RestauranteController.registerRestaurante);
 restauranteRouter.post('/login',RestauranteController.authenticateRestaurante);
-restauranteRouter.delete('/',verifyToken,RestauranteController.eraseRestaurante)
+restauranteRouter.delete('/',verifyToken,RestauranteController.eraseRestaurante);
+restauranteRouter.put('/',verifyToken,RestauranteController.editRestaurante);
 
 export default restauranteRouter;
