@@ -1,7 +1,7 @@
 import { sign } from "jsonwebtoken";
 import User from "../model/User";
 import { bodyUserType } from "../types/bodyUserType";
-import { userAutenticateType } from "../types/userAutenticateType";
+import { AutenticateType } from "../types/AutenticateType";
 import { hash, compare } from "bcrypt"
 
 class UserRepository {
@@ -25,57 +25,55 @@ class UserRepository {
 
   async createUser({ nome, email, idade, localizacao, senha, cpf }: bodyUserType) {
     try {
-      const senhaCripitada = await hash(senha, 2);
+      const senhaCripitografada = await hash(senha, 2);
       const usuario = await User.create({
         nome,
         email,
         idade,
         localizacao,
-        senha: senhaCripitada,
+        senha: senhaCripitografada,
         cpf,
       });
-      return { usuario, status: 200 };
+      return { usuario, status: 201 };
     } catch (error) {
-      return { message: `Erro ao criar usuarios`, status: 400, error };
+      return { message: `Erro ao criar usuario`, status: 400, error };
     }
   }
 
-  async updateUser({ nome, idade, senha, localizacao }: bodyUserType,email: string) {
+  async updateUser({ nome, idade, senha, localizacao }: bodyUserType,id: string) {
     try {
-      const data = await this.getUserByEmail(email);
-      if (data.usuario) {
-        const usuario = data.usuario;
-        const senhaCripitada = await hash(senha, 2);
-        const usuarioAtualizado = await User.findByIdAndUpdate(usuario._id, {
+        const senhaCripitografada = await hash(senha, 2);
+        const usuarioAtualizado = await User.findByIdAndUpdate(id, {
           nome,
           idade,
-          senha: senhaCripitada,
+          senha: senhaCripitografada,
           localizacao,
-        });
-        return { usuarioAtualizado, status: 200 };
-      }
-      return { message: `Usuario inexistente`, status: 404 };
+        },{ new: true });
+
+        if(usuarioAtualizado){
+          return { usuarioAtualizado, status: 200 };
+        }
+        return { message: `Usuario inexistente`, status: 404};
+        
     } catch (error) {
-      return { message: `Erro ao criar usuarios`, status: 400, error };
+      return { message: `Erro ao atualizar usuario`, status: 400, error };
     }
   }
 
-  async deleteUser(email: string) {
+  async deleteUser(id: string) {
     try {
-      const data = await this.getUserByEmail(email);
-      if (data.usuario) {
-        const usuario = data.usuario;
-        await User.findByIdAndDelete(usuario._id);
-        const usuarios = await this.getAllUsers();
-        return { usuarios, status: 200 };
-      }
-      return {message:"Usuario Inexistente",status:404}
+        const usuarioDeletado=await User.findByIdAndDelete(id);
+        if(usuarioDeletado){
+          const usuarios = await this.getAllUsers();
+          return { usuarios, status: 200 };
+        }
+        return { message: `Usuario inexistente`, status: 404};
     } catch (error) {
       return { message: `Erro ao deletar usuario`, status: 400, error };
     }
   }
 
-  async authenticateUser({ email, senha }: userAutenticateType) {
+  async authenticateUser({ email, senha }: AutenticateType) {
     try {
       const data = await this.getUserByEmail(email);
       if (data.usuario) {
