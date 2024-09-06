@@ -8,11 +8,13 @@ const AvaliacaoSchema=new Schema({
         default:()=> uuid()
     },
     idUser:{
-        type:Schema.Types.ObjectId, ref:'User',
+        type:String,
+         ref:'User',
         required:true
     },
     idRestaurante:{
-        type:Schema.Types.ObjectId, ref:'Restaurante',
+        type:String,
+        ref:'Restaurante',
         required:true
     },
     nota:{
