@@ -2,6 +2,7 @@ import Avaliacao from "../model/Avaliação";
 import { AvaliacaoType } from "../types/AvaliacaoType";
 import RestauranteRepository from "./RestauranteRepository";
 import UserRepository from "./UserRepository";
+import User from "../model/User";
 
 class AvaliacaoRepository{
     async userAvaliationRestaurante({idUser,idRestaurante,nota}:AvaliacaoType){
@@ -16,16 +17,36 @@ class AvaliacaoRepository{
                 return {message:verifyRestaurante.message,status:verifyUser.status}
             }
 
-          const avaliacao=await Avaliacao.create({
-            idUser,
-            idRestaurante,
-            nota
-          })
-          return {avaliacao,status:201}
+            const avaliacao=await Avaliacao.create({
+              idUser,
+              idRestaurante,
+              nota
+            })
+            return {avaliacao,status:201}
         }catch(error){
             return {message:"error ao criar avaliacao",status:400,error}
         }
       }
+
+    async getAvaliationsByIdRestaurante(idRestaurante:string){
+        try {
+          const avaliacoes = await Avaliacao.find({ idRestaurante }).exec();
+          
+          const avaliacoesNameUser= [];
+
+          for (const avaliacao of avaliacoes) {
+            const usuario = await User.findById(avaliacao.idUser);
+            avaliacoesNameUser.push({
+              idUser:avaliacao.idUser,
+              nomeUsuario: usuario?.nome, 
+              nota: avaliacao.nota
+            });
+          }
+            return {avaliacoesNameUser,status:200}
+        }catch (error) {
+          return {message:"error ao listar avaliacões",status:400,error}
+        }
+    }
 }
 
 export default new AvaliacaoRepository();

@@ -57,9 +57,7 @@ class UserController {
     ? res.status(201).json(result.token)
     : res.status(404).json({message:result.message,erro:result.error})
   }
-
-
-
+  
   async createAvaliation(req:Request,res:Response){
     const idRestaurante=req.headers['idrestaurante'] as string;
     const {nota}=req.body;
