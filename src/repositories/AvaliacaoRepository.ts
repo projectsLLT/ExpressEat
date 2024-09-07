@@ -3,6 +3,7 @@ import { AvaliacaoType } from "../types/AvaliacaoType";
 import RestauranteRepository from "./RestauranteRepository";
 import UserRepository from "./UserRepository";
 import User from "../model/User";
+import calculoAvaliaçãoRestaurante from "../middlewares/calculoAvaliacaoRestaurante";
 
 class AvaliacaoRepository{
     async userAvaliationRestaurante({idUser,idRestaurante,nota}:AvaliacaoType){
@@ -22,6 +23,9 @@ class AvaliacaoRepository{
               idRestaurante,
               nota
             })
+            
+            await calculoAvaliaçãoRestaurante(nota,idRestaurante);
+
             return {avaliacao,status:201}
         }catch(error){
             return {message:"error ao criar avaliacao",status:400,error}
