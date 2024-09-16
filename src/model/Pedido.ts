@@ -28,7 +28,7 @@ const PedidoSchema = new Schema({
 
     statusPagamento:{
         type:String,
-        enum: ['pending','confirmed'],
+        enum: ['pending','confirmed','canceled'],
         default: 'pending',
         required: true,
     },
