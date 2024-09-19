@@ -42,5 +42,4 @@ const UserSchema= new Schema({
 });
 
 const User=mongoDb.model('Usuario',UserSchema);
-
 export default User;
