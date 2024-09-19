@@ -3,7 +3,19 @@ import {v4 as uuid} from 'uuid'
 import mongoose, { now } from "mongoose";
 import { type } from "os";
 const { Schema } = mongoose;
-import User from './User';
+
+
+const ItemPedidoSchema = new Schema({
+    idItem: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Item',
+        required: true
+    },
+    quantidade: {
+        type: Number,  
+        required: true
+    }
+});
 
 const PedidoSchema = new Schema({
     _id:{
@@ -42,19 +54,11 @@ const PedidoSchema = new Schema({
 
     usuario: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Usuario',
+        ref: 'User',
         required: true
     },
 
-    quantidadeItens: {
-        type:Number
-    },
-
-    idItens: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Item',
-        required: true
-    }]
+    itens: [ItemPedidoSchema]
 
 })
 
