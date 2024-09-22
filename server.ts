@@ -17,3 +17,5 @@ app.use('/pedidos',pedidoRouter)
 app.listen(port, () => {
   console.log("Servidor On 🔥🔥");
 });
+
+export default app;
