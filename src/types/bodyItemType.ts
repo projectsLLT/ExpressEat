@@ -3,5 +3,6 @@ export type bodyItemType={
     nome:String,
     valor:Number,
     quantidade:Number,
-    idRestaurante?:String
+    idRestaurante?:String,
+    src?:String
 }

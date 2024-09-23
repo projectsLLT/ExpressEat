@@ -21,7 +21,7 @@ class ItemRepository{
         }
     }
 
-    async createItem({descricao,nome,valor,quantidade,idRestaurante}:bodyItemType){
+    async createItem({descricao,nome,valor,quantidade,idRestaurante,src}:bodyItemType){
 
         try {
             const item = await Item.create({
@@ -29,7 +29,8 @@ class ItemRepository{
                 nome,
                 valor,
                 quantidade,
-                idRestaurante
+                idRestaurante,
+                src
             }
         )
             return {item,status:201}
@@ -63,13 +64,14 @@ class ItemRepository{
         }
     }
 
-    async editItem({descricao,nome,valor,quantidade}:bodyItemType,id:string){
+    async editItem({descricao,nome,valor,quantidade,src}:bodyItemType,id:string){
         try {
             const itemEditado = await Item.findByIdAndUpdate(id,{
                 descricao,
                 nome,
                 valor,
-                quantidade
+                quantidade,
+                src
             },
             {new:true})
     
