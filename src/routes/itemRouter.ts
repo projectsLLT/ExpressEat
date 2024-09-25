@@ -1,12 +1,14 @@
-import express  from "express";
+
+import { Router } from "express"
 import ItemController from "../controller/ItemController";
-import upload from "../middlewares/configMulter";
 
-const itemRouter = express.Router();
+const itemRouter = Router();
 
-itemRouter.get('/itens',ItemController.listAll)
-itemRouter.post('/itens',upload.single('image'),ItemController.createItem)
-itemRouter.put("/itens",ItemController.updateItem)
-itemRouter.delete('/itens',ItemController.deleteItem)
+itemRouter.get('/',ItemController.listAll)
+itemRouter.post('/', ItemController.createItem)
+itemRouter.put("/",ItemController.updateItem)
+itemRouter.delete('/',ItemController.deleteItem)
 itemRouter.delete('/itens/all',ItemController.deleteAllItens)
 itemRouter.get('/itens/id',ItemController.getItemById)
+
+export default itemRouter

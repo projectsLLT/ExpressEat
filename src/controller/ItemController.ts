@@ -21,8 +21,7 @@ class ItemController {
 
     async createItem(req:Request,res:Response){
         const {descricao,nome,valor,quantidade,idRestaurante} = req.body;
-        const src = req.file?.path
-        const result = await ItemRepository.createItem({descricao,nome,valor,quantidade,idRestaurante,src})
+        const result = await ItemRepository.createItem({descricao,nome,valor,quantidade,idRestaurante})
         result.status===201
         ? res.status(200).json(result.item)
         : res.status(400).json({message:result.message,erro:result.error})
@@ -47,8 +46,7 @@ class ItemController {
     async updateItem(req:Request,res:Response){
         const id = req.ID
         const {descricao,nome,valor,quantidade} = req.body;
-        const src = req.file?.path
-        const result = await ItemRepository.editItem({descricao,nome,valor,quantidade,src},id)
+        const result = await ItemRepository.editItem({descricao,nome,valor,quantidade},id)
 
         result.status===200
         ? res.status(200).json(result.itemEditado)
@@ -59,4 +57,4 @@ class ItemController {
 
 }
 
-export	default new ItemController()
+export default new ItemController()

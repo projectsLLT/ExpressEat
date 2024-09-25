@@ -24,12 +24,7 @@ const ItemSchema=new Schema({
     idRestaurante: {
         type: String,
         required: true
-    },
-    src: {
-        type: String, 
-        required: true 
-    },
-
+    }
 })
 
 const Item=mongoDb.model('Item',ItemSchema)
