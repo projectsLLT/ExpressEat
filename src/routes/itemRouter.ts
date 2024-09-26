@@ -4,9 +4,12 @@ import upload from "../middlewares/configMulter";
 
 const itemRouter = express.Router();
 
-itemRouter.get('/itens',ItemController.listAll)
-itemRouter.post('/itens',upload.single('image'),ItemController.createItem)
-itemRouter.put("/itens",ItemController.updateItem)
-itemRouter.delete('/itens',ItemController.deleteItem)
-itemRouter.delete('/itens/all',ItemController.deleteAllItens)
-itemRouter.get('/itens/id',ItemController.getItemById)
+itemRouter.get('/',ItemController.listAll)
+itemRouter.post('/',ItemController.createItem)
+itemRouter.put("/:id",ItemController.updateItem)
+itemRouter.delete('/:id',ItemController.deleteItem)
+itemRouter.delete('/all',ItemController.deleteAllItens)
+itemRouter.get('/:id',ItemController.getItemById)
+itemRouter.post('/:id', upload.single('image'), ItemController.uploadImage)
+
+export default itemRouter;

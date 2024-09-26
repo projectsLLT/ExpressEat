@@ -27,7 +27,7 @@ const ItemSchema=new Schema({
     },
     src: {
         type: String, 
-        required: true 
+        required: false
     },
 
 })

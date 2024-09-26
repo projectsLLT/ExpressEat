@@ -21,7 +21,7 @@ class ItemRepository{
         }
     }
 
-    async createItem({descricao,nome,valor,quantidade,idRestaurante,src}:bodyItemType){
+    async createItem({descricao,nome,valor,quantidade,idRestaurante}:bodyItemType){
 
         try {
             const item = await Item.create({
@@ -29,8 +29,7 @@ class ItemRepository{
                 nome,
                 valor,
                 quantidade,
-                idRestaurante,
-                src
+                idRestaurante
             }
         )
             return {item,status:201}
