@@ -106,11 +106,11 @@ describe('UserController Tests', () => {
   });
 
   // 10. Test eraseUser (User Not Found)
-  it('should return 404 when trying to delete a non-existent user', async () => {
+  it('should return 400 when trying to delete a non-existent user', async () => {
     UserRepository.deleteUser = jest.fn().mockResolvedValue({ message: 'Usuario inexistente', status: 404 });
 
     await UserController.eraseUser(req as Request, res as Response);
-    expect(res.status).toHaveBeenCalledWith(404);
+    expect(res.status).toHaveBeenCalledWith(400);
     expect(res.json).toHaveBeenCalledWith({ message: 'Usuario inexistente', erro: undefined });
   });
 

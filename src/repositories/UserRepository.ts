@@ -3,7 +3,10 @@ import { sign } from "jsonwebtoken";
 import User from "../model/User";
 import { bodyUserType } from "../types/bodyUserType";
 import { AutenticateType } from "../types/AutenticateType";
-import { hash, compare } from "bcrypt"
+import { hash, compare } from "bcrypt";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 class UserRepository {
   async getAllUsers() {
@@ -85,10 +88,14 @@ class UserRepository {
 
   async authenticateUser({ email, senha }: AutenticateType) {
     try {
-      const data = await this.getUserByEmail(email);
-      if (data.usuario) {
-        const usuario = data.usuario;
+      const usuario = await User.findOne({ email }).exec();
+      console.log(usuario);
+      
+      if (usuario) {
+
         const verifyPassword = await compare(senha, usuario.senha);
+        
+        
         if(!verifyPassword){
             return {message:'Senha incorreta',status:404,error:null};
         }
@@ -101,12 +108,13 @@ class UserRepository {
                 expiresIn:"12hrs"
             }
         )
+        
         return {token,status:201}
       }
       return {message:"Email incorreto",status:404,error:null}
 
     } catch (error) {
-        return {message:"Email incorreto",status:404,error}
+        return {message:"Email ou senha incorreta incorreto",status:404,error}
     }
   }
 }

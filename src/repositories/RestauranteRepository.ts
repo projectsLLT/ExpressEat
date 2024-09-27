@@ -3,6 +3,9 @@ import { AutenticateType } from "../types/AutenticateType";
 import { bodyRestauranteType } from "../types/bodyRestauranteType";
 import { hash,compare } from "bcrypt";
 import { sign } from "jsonwebtoken";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 class RestauranteRepository{
     async getAll(){
