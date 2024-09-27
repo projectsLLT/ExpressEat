@@ -7,7 +7,7 @@ const { Schema } = mongoose;
 
 const ItemPedidoSchema = new Schema({
     idItem: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: String,
         ref: 'Item',
         required: true
     },
@@ -18,49 +18,50 @@ const ItemPedidoSchema = new Schema({
 });
 
 const PedidoSchema = new Schema({
-    _id:{
-        type:String,
-        default:()=>uuid()
+    _id: {
+        type: String,
+        default: () => uuid() 
     },
 
-    descricao:{
-        type:String,
+    descricao: {
+        type: String,
         required: true,
     },
     
-    preco:{
-        type:Number,
+    preco: {
+        type: Number,
         required: true,
     },
 
-    statusEntrega:{
-        type:String,
-        enum: ['ongoing','delivered','preparing','canceled'],
+    statusEntrega: {
+        type: String,
+        enum: ['ongoing', 'delivered', 'preparing', 'canceled'],
         default: 'preparing',
         required: true,
     },
 
-    statusPagamento:{
-        type:String,
-        enum: ['pending','confirmed','canceled'],
+    statusPagamento: {
+        type: String,
+        enum: ['pending', 'confirmed', 'canceled'],
         default: 'pending',
         required: true,
     },
 
-    data:{
-       type: Date,
-       default: Date.now 
+    data: {
+        type: Date,
+        default: Date.now 
     },
 
     usuario: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: String,
         ref: 'User',
         required: true
     },
 
     itens: [ItemPedidoSchema]
 
-})
+});
+
 
 const Pedido=mongoDb.model('Pedido',PedidoSchema);
 export default Pedido;

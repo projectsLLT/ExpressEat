@@ -12,7 +12,7 @@ class ItemController {
     }
 
     async getItemById(req:Request,res:Response){
-        const id = req.ID
+        const id = req.params.id
         const result = await ItemRepository.getItemById(id);
         result.status===200
         ? res.status(200).json(result.item)
@@ -22,13 +22,14 @@ class ItemController {
     async createItem(req:Request,res:Response){
         const {descricao,nome,valor,quantidade,idRestaurante} = req.body;
         const result = await ItemRepository.createItem({descricao,nome,valor,quantidade,idRestaurante})
+        const result = await ItemRepository.createItem({descricao,nome,valor,quantidade,idRestaurante})
         result.status===201
         ? res.status(200).json(result.item)
         : res.status(400).json({message:result.message,erro:result.error})
     }
 
     async deleteItem(req:Request,res:Response){
-        const id = req.ID
+        const id = req.params.id
         const result = await ItemRepository.deleteItem(id)
         result.status===200
         ? res.status(200).json(result.itens)
@@ -36,7 +37,7 @@ class ItemController {
 
     }
     async deleteAllItens(req:Request,res:Response){
-        const id = req.ID;
+        const id = req.params.id;
         const result = await ItemRepository.deleteAllItens(id)
         result.status===200
         ? res.status(200).json(result.itens)
@@ -44,14 +45,27 @@ class ItemController {
     }
 
     async updateItem(req:Request,res:Response){
-        const id = req.ID
+        const id = req.params.id
         const {descricao,nome,valor,quantidade} = req.body;
+        const src = req.file?.path
         const result = await ItemRepository.editItem({descricao,nome,valor,quantidade},id)
 
         result.status===200
         ? res.status(200).json(result.itemEditado)
         : res.status(result.status).json({message:result.message,erro:result.error})
     }
+
+    async uploadImage(req:Request,res:Response) {
+        const id = req.params.id
+        const src = req.file?.path
+        const {descricao,nome,valor,quantidade} = req.body;
+        const result = await ItemRepository.editItem({descricao,nome,valor,quantidade,src},id)
+        result.status===200
+        ? res.status(200).json(result.itemEditado?.src)
+        : res.status(result.status).json({message:result.message,erro:result.error})
+    }
+
+
 
 
 

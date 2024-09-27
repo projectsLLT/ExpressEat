@@ -1,120 +1,133 @@
+import { Request, Response } from 'express';
+import PedidoController from '../src/controller/PedidoController';
 import PedidoRepository from '../src/repositories/PedidoRepository';
-import Pedido from '../src/model/Pedido';
-import mongoose from 'mongoose';
+import { bodyPedidoType } from '../src/types/bodyPedidoType';
 
-jest.mock('../src/model/Pedido');
+jest.mock('../src/repositories/PedidoRepository');
 
-describe('PedidoRepository', () => {
-    const validId = new mongoose.Types.ObjectId().toString();
-    const invalidId = 'invalidId';
-    
+describe('PedidoController', () => {
+    const req = {} as Request;
+    const res = {} as Response;
+
     beforeEach(() => {
-        jest.clearAllMocks();
+        res.status = jest.fn().mockReturnThis();
+        res.json = jest.fn().mockReturnThis();
     });
 
+    it('deve listar todos os pedidos de um usuário', async () => {
+        req.params = { usuarioId: '1' };
+        PedidoRepository.getAllForUserId = jest.fn().mockResolvedValue([{ id: '1', descricao: 'Pedido 1' }]);
 
+        await PedidoController.listAllForUser(req, res);
 
-    it('Deve criar um pedido com itens válidos', async () => {
-        const pedidoData = {
-            descricao: 'Pedido Teste',
-            usuario: validId,
-            itens: [{ idItem: validId, quantidade: 2 }]
+        expect(PedidoRepository.getAllForUserId).toHaveBeenCalledWith('1');
+        expect(res.status).toHaveBeenCalledWith(200);
+        expect(res.json).toHaveBeenCalledWith([{ id: '1', descricao: 'Pedido 1' }]);
+    });
+
+    it('deve tratar erros ao listar pedidos de um usuário', async () => {
+        req.params = { usuarioId: '1' };
+        PedidoRepository.getAllForUserId = jest.fn().mockRejectedValue(new Error('Erro no banco de dados'));
+
+        await PedidoController.listAllForUser(req, res);
+
+        expect(res.status).toHaveBeenCalledWith(500);
+        expect(res.json).toHaveBeenCalledWith({ message: "Erro ao buscar pedidos do usuário", erro: expect.any(Error) });
+    });
+
+    it('deve criar um novo pedido', async () => {
+        req.body = {
+            descricao: 'Novo Pedido',
+            usuario: '1',
+            itens: [{ idItem: 'item1', quantidade: 2 }]
         };
+        PedidoRepository.createPedido = jest.fn().mockResolvedValue({ pedido: { id: '1', descricao: 'Novo Pedido' }, status: 201 });
 
-        (Pedido.create as jest.Mock).mockResolvedValue({ ...pedidoData, preco: 100 });
-        
-        const result = await PedidoRepository.createPedido(pedidoData);
-        expect(result.status).toBe(201);
-        expect(result.pedido).toHaveProperty('descricao', 'Pedido Teste');
+        await PedidoController.createPedido(req, res);
+
+        expect(PedidoRepository.createPedido).toHaveBeenCalledWith(req.body);
+        expect(res.status).toHaveBeenCalledWith(201);
+        expect(res.json).toHaveBeenCalledWith({ id: '1', descricao: 'Novo Pedido' });
     });
 
-
-
-    it('Não deve criar um pedido com ID de item inválido', async () => {
-        const pedidoData = {
-            descricao: 'Pedido Inválido',
-            usuario: validId,
-            itens: [{ idItem: invalidId, quantidade: 2 }]
+    it('deve tratar erros ao criar um pedido', async () => {
+        req.body = {
+            descricao: 'Novo Pedido',
+            usuario: '1',
+            itens: [{ idItem: 'item1', quantidade: 2 }]
         };
+        PedidoRepository.createPedido = jest.fn().mockResolvedValue({ message: 'Erro', status: 400 });
 
-        const result = await PedidoRepository.createPedido(pedidoData);
-        expect(result.status).toBe(400);
-        expect(result.message).toBe(`ID de item inválido: ${invalidId}`);
+        await PedidoController.createPedido(req, res);
+
+        expect(res.status).toHaveBeenCalledWith(400);
+        expect(res.json).toHaveBeenCalledWith({ message: 'Erro', erro: undefined });
     });
 
+    it('deve deletar um pedido pelo ID', async () => {
+        req.params = { id: '1' };
+        PedidoRepository.deletePedidoById = jest.fn().mockResolvedValue({ message: 'Pedido deletado com sucesso', status: 200 });
 
+        await PedidoController.deletePedido(req, res);
 
-    it('Deve retornar todos os pedidos de um usuário', async () => {
-        (Pedido.find as jest.Mock).mockResolvedValue([{ usuario: validId }]);
-        
-        const result = await PedidoRepository.getAllForUserId(validId);
-        expect(result).toHaveLength(1);
-        expect(result[0]).toHaveProperty('usuario', validId);
+        expect(PedidoRepository.deletePedidoById).toHaveBeenCalledWith('1');
+        expect(res.status).toHaveBeenCalledWith(200);
+        expect(res.json).toHaveBeenCalledWith({ message: 'Pedido deletado com sucesso' });
     });
 
+    it('deve tratar erros ao deletar um pedido', async () => {
+        req.params = { id: '1' };
+        PedidoRepository.deletePedidoById = jest.fn().mockResolvedValue({ message: 'Pedido não encontrado', status: 404 });
 
+        await PedidoController.deletePedido(req, res);
 
-    it('Deve deletar um pedido pelo ID', async () => {
-        (Pedido.findByIdAndDelete as jest.Mock).mockResolvedValue({ _id: validId });
-        
-        const result = await PedidoRepository.deletePedidoById(validId);
-        expect(result.status).toBe(200);
-        expect(result.message).toBe("Pedido deletado com sucesso");
+        expect(res.status).toHaveBeenCalledWith(404);
+        expect(res.json).toHaveBeenCalledWith({ message: 'Pedido não encontrado', erro: undefined });
     });
 
+    it('deve atualizar o status de entrega de um pedido', async () => {
+        req.params = { id: '1' };
+        req.body = { novoStatusEntrega: 'delivered' };
+        PedidoRepository.updateStatusEntregaById = jest.fn().mockResolvedValue({ pedido: { statusEntrega: 'delivered' }, status: 200 });
 
+        await PedidoController.updateStatusEntrega(req, res);
 
-    it('Deve retornar erro ao tentar deletar pedido com ID inválido', async () => {
-        const result = await PedidoRepository.deletePedidoById(invalidId);
-        expect(result.status).toBe(400);
-        expect(result.message).toBe("ID inválido");
+        expect(PedidoRepository.updateStatusEntregaById).toHaveBeenCalledWith('1', 'delivered');
+        expect(res.status).toHaveBeenCalledWith(200);
+        expect(res.json).toHaveBeenCalledWith({ statusEntrega: 'delivered' });
     });
 
+    it('deve tratar erros ao atualizar o status de entrega', async () => {
+        req.params = { id: '1' };
+        req.body = { novoStatusEntrega: 'invalido' };
+        PedidoRepository.updateStatusEntregaById = jest.fn().mockResolvedValue({ message: 'Status de entrega inválido', status: 400 });
 
+        await PedidoController.updateStatusEntrega(req, res);
 
-    it('Deve atualizar o status de entrega de um pedido', async () => {
-        const novoStatus = 'delivered';
-        (Pedido.findByIdAndUpdate as jest.Mock).mockResolvedValue({ statusEntrega: novoStatus });
-        
-        const result = await PedidoRepository.updateStatusEntregaById(validId, novoStatus);
-        expect(result.status).toBe(200);
-        expect(result.pedido).toHaveProperty('statusEntrega', novoStatus);
+        expect(res.status).toHaveBeenCalledWith(400);
+        expect(res.json).toHaveBeenCalledWith({ message: 'Status de entrega inválido', erro: undefined });
     });
 
+    it('deve atualizar o status de pagamento de um pedido', async () => {
+        req.params = { id: '1' };
+        req.body = { novoStatusPagamento: 'confirmed' };
+        PedidoRepository.updateStatusPagamento = jest.fn().mockResolvedValue({ pedido: { statusPagamento: 'confirmed' }, status: 200 });
 
+        await PedidoController.updateStatusPagamento(req, res);
 
-    it('Deve retornar erro ao tentar atualizar status de entrega inválido', async () => {
-        const result = await PedidoRepository.updateStatusEntregaById(validId, 'invalidStatus');
-        expect(result.status).toBe(400);
-        expect(result.message).toBe("Status de entrega inválido");
+        expect(PedidoRepository.updateStatusPagamento).toHaveBeenCalledWith('1', 'confirmed');
+        expect(res.status).toHaveBeenCalledWith(200);
+        expect(res.json).toHaveBeenCalledWith({ statusPagamento: 'confirmed' });
     });
 
+    it('deve tratar erros ao atualizar o status de pagamento', async () => {
+        req.params = { id: '1' };
+        req.body = { novoStatusPagamento: 'invalido' };
+        PedidoRepository.updateStatusPagamento = jest.fn().mockResolvedValue({ message: 'Status de pagamento inválido', status: 400 });
 
+        await PedidoController.updateStatusPagamento(req, res);
 
-    it('Deve atualizar o status de pagamento de um pedido', async () => {
-        const novoStatus = 'confirmed';
-        (Pedido.findByIdAndUpdate as jest.Mock).mockResolvedValue({ statusPagamento: novoStatus });
-        
-        const result = await PedidoRepository.updateStatusPagamento(validId, novoStatus);
-        expect(result.status).toBe(200);
-        expect(result.pedido).toHaveProperty('statusPagamento', novoStatus);
+        expect(res.status).toHaveBeenCalledWith(400);
+        expect(res.json).toHaveBeenCalledWith({ message: 'Status de pagamento inválido', erro: undefined });
     });
-
-
-
-    it('Deve retornar erro ao tentar atualizar status de pagamento inválido', async () => {
-        const result = await PedidoRepository.updateStatusPagamento(validId, 'invalidStatus');
-        expect(result.status).toBe(400);
-        expect(result.message).toBe("Status de pagamento inválido");
-    });
-
-
-
-    it('Deve retornar erro ao tentar atualizar status de pagamento com ID inválido', async () => {
-        const result = await PedidoRepository.updateStatusPagamento(invalidId, 'confirmed');
-        expect(result.status).toBe(400);
-        expect(result.message).toBe("ID inválido");
-    });
-
-
 });
