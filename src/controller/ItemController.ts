@@ -1,5 +1,6 @@
 import { Request,Response } from "express";
 import ItemRepository from "../repositories/ItemRepository";
+import { stringify } from "querystring";
 
 
 class ItemController {
@@ -21,7 +22,6 @@ class ItemController {
 
     async createItem(req:Request,res:Response){
         const {descricao,nome,valor,quantidade,idRestaurante} = req.body;
-        const result = await ItemRepository.createItem({descricao,nome,valor,quantidade,idRestaurante})
         const result = await ItemRepository.createItem({descricao,nome,valor,quantidade,idRestaurante})
         result.status===201
         ? res.status(200).json(result.item)
@@ -55,19 +55,23 @@ class ItemController {
         : res.status(result.status).json({message:result.message,erro:result.error})
     }
 
+    
+
+
+
+
     async uploadImage(req:Request,res:Response) {
         const id = req.params.id
         const src = req.file?.path
-        const {descricao,nome,valor,quantidade} = req.body;
-        const result = await ItemRepository.editItem({descricao,nome,valor,quantidade,src},id)
-        result.status===200
-        ? res.status(200).json(result.itemEditado?.src)
-        : res.status(result.status).json({message:result.message,erro:result.error})
+        if(src){
+            const result = await ItemRepository.setImage(id,src)   
+            result.status===200
+            ? res.status(200).json(result.itemEditado)
+            : res.status(result.status).json({message:result.message,erro:result.error})
+        } else {
+            res.status(404).json({message:"a requisição não contém imagem"})
+        }
     }
-
-
-
-
 
 }
 

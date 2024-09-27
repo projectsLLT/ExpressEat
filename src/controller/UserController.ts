@@ -45,7 +45,7 @@ class UserController {
 
     result.status === 200
       ? res.status(200).json(result.usuarios)
-      : res.status(400).json({ message: result.message, erro: result.error });
+      : res.status(404).json({ message: result.message, erro: result.error });
   }
 
   async authenticateUser(req:Request,res:Response){

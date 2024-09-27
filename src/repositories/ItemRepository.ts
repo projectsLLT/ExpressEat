@@ -82,6 +82,25 @@ class ItemRepository{
         }
     } 
 
+    async setImage(id:string, src:String){
+
+        console.log("aqui ja ta no repository: " + src )
+        try {
+            const itemEditado = await Item.findByIdAndUpdate(id,{
+                src
+            },
+            {new:true})
+    
+            if(itemEditado){
+                return {itemEditado,status:200}
+            }
+            return {message:"Item inexistente", status:404}
+        } catch (error) {
+            return {message:'erro ao definir a imagem do item',status:400,error}
+        }
+
+    }
+
 }
 
 export default new ItemRepository()

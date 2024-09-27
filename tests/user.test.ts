@@ -3,7 +3,7 @@ import UserRepository from '../src/repositories/UserRepository';
 import { Request, Response } from 'express';
 
 // Mocking the repository methods
-jest.mock('../repositories/UserRepository');
+jest.mock('../src/repositories/UserRepository');
 
 describe('UserController Tests', () => {
   
