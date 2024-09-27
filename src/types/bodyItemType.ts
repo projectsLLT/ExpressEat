@@ -4,5 +4,6 @@ export type bodyItemType={
     valor:Number,
     quantidade:Number,
     idRestaurante?:String
+    src?:String
 }
 
