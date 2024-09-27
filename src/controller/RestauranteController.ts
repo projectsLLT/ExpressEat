@@ -58,5 +58,4 @@ class restauranteController{
         : res.status(result.status).json({message:result.message,erro:result.error})
     }
 }
-
 export default new restauranteController();

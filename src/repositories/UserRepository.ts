@@ -1,3 +1,4 @@
+
 import { sign } from "jsonwebtoken";
 import User from "../model/User";
 import { bodyUserType } from "../types/bodyUserType";
@@ -109,4 +110,5 @@ class UserRepository {
     }
   }
 }
+
 export default new UserRepository();

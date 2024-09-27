@@ -107,5 +107,4 @@ class RestauranteRepository{
         }
     }
 }
-
 export default new RestauranteRepository();
