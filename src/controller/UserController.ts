@@ -1,3 +1,4 @@
+import AvaliacaoRepository from "../repositories/AvaliacaoRepository";
 import UserRepository from "../repositories/UserRepository";
 import { Request, Response } from "express";
 
@@ -45,7 +46,7 @@ class UserController {
 
     result.status === 200
       ? res.status(200).json(result.usuarios)
-      : res.status(404).json({ message: result.message, erro: result.error });
+      : res.status(400).json({ message: result.message, erro: result.error });
   }
 
   async authenticateUser(req:Request,res:Response){
@@ -54,6 +55,18 @@ class UserController {
 
     result.status===201 
     ? res.status(201).json(result.token)
+    : res.status(404).json({message:result.message,erro:result.error})
+  }
+  
+  async createAvaliation(req:Request,res:Response){
+    const idRestaurante=req.headers['idrestaurante'] as string;
+    const {nota}=req.body;
+    const idUser=req.ID;
+
+    const result=await AvaliacaoRepository.userAvaliationRestaurante({idUser,idRestaurante,nota});
+
+    result.status===201 
+    ? res.status(201).json(result.avaliacao)
     : res.status(404).json({message:result.message,erro:result.error})
   }
 }

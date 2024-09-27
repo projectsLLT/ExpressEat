@@ -10,4 +10,6 @@ restauranteRouter.post('/login',RestauranteController.authenticateRestaurante);
 restauranteRouter.delete('/',verifyToken,RestauranteController.eraseRestaurante);
 restauranteRouter.put('/',verifyToken,RestauranteController.editRestaurante);
 
+restauranteRouter.get('/avaliacoes',RestauranteController.listAllAvaliacoes)
+
 export default restauranteRouter;

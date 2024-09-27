@@ -23,6 +23,15 @@ class RestauranteRepository{
         }
     }
 
+    async getRestauranteById(id:string){
+        try {
+            const restaurante=await Restaurante.findById(id).exec()
+            return restaurante? { restaurante, status: 200 } : { message: `Restaurante inexistente`, status: 404 };
+        } catch (error) {
+            return {message:"erro ao listar restaurante",status:404,error}
+        }
+    }
+
     async createRestaurante({nome,email,senha,localizacao,cnpj}:bodyRestauranteType){
         try {
             const senhaCripitografada=await hash(senha,2);
@@ -98,5 +107,4 @@ class RestauranteRepository{
         }
     }
 }
-
 export default new RestauranteRepository();

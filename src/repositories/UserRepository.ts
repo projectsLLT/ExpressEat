@@ -1,3 +1,4 @@
+
 import { sign } from "jsonwebtoken";
 import User from "../model/User";
 import { bodyUserType } from "../types/bodyUserType";
@@ -14,10 +15,19 @@ class UserRepository {
     }
   }
 
+  async getUserById(id:string){
+    try {
+      const usuario=await User.findById(id).exec();
+      return usuario ? { usuario, status: 200 } : { message: `Usuario inexistente`, status: 404 };
+    } catch (error) {
+      return { message: `Erro ao listar usuario`, status: 400, error };
+    }
+  }
+
   async getUserByEmail(email: string) {
     try {
       const usuario = await User.findOne({ email }).exec();
-      return usuario? { usuario, status: 200 } : { message: `Usuario inexistente`, status: 404 };
+      return usuario ? { usuario, status: 200 } : { message: `Usuario inexistente`, status: 404 };
     } catch (error) {
       return { message: `Erro ao listar usuario`, status: 400, error };
     }
@@ -100,4 +110,5 @@ class UserRepository {
     }
   }
 }
+
 export default new UserRepository();

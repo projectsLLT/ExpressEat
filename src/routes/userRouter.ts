@@ -10,5 +10,5 @@ userRouter.get('/:email',UserController.listUserByEmail)
 userRouter.post('/',UserController.registerUser);
 userRouter.put('/',verifyToken,UserController.editUser);
 userRouter.delete('/',verifyToken,UserController.eraseUser)
-
+userRouter.post('/restaurante/avaliacao',verifyToken,UserController.createAvaliation)
 export default userRouter;

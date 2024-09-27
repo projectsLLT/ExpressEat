@@ -1,5 +1,6 @@
 import { Request,Response } from "express";
 import RestauranteRepository from "../repositories/RestauranteRepository";
+import AvaliacaoRepository from "../repositories/AvaliacaoRepository";
 
 class restauranteController{
     async listAll(req:Request,res:Response){
@@ -46,6 +47,15 @@ class restauranteController{
         ? res.status(200).json(result.restauranteEditado)
         : res.status(result.status).json({message:result.message,erro:result.error})
     }
-}
 
+    async listAllAvaliacoes(req:Request,res:Response){
+        const id=req.headers['id'] as string;
+
+        const result = await AvaliacaoRepository.getAvaliationsByIdRestaurante(id);
+
+        result.status===200
+        ? res.status(200).json(result.avaliacoesNameUser)
+        : res.status(result.status).json({message:result.message,erro:result.error})
+    }
+}
 export default new restauranteController();
