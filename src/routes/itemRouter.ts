@@ -1,8 +1,8 @@
-import express  from "express";
-import ItemController from "../controller/ItemController";
-import upload from "../middlewares/configMulter";
 
-const itemRouter = express.Router();
+import { Router } from "express"
+import ItemController from "../controller/ItemController";
+
+const itemRouter = Router();
 
 itemRouter.get('/',ItemController.listAll)
 itemRouter.post('/',ItemController.createItem)

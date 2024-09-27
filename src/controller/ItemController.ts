@@ -22,6 +22,7 @@ class ItemController {
     async createItem(req:Request,res:Response){
         const {descricao,nome,valor,quantidade,idRestaurante} = req.body;
         const result = await ItemRepository.createItem({descricao,nome,valor,quantidade,idRestaurante})
+        const result = await ItemRepository.createItem({descricao,nome,valor,quantidade,idRestaurante})
         result.status===201
         ? res.status(200).json(result.item)
         : res.status(400).json({message:result.message,erro:result.error})

@@ -63,14 +63,13 @@ class ItemRepository{
         }
     }
 
-    async editItem({descricao,nome,valor,quantidade,src}:bodyItemType,id:string){
+    async editItem({descricao,nome,valor,quantidade}:bodyItemType,id:string){
         try {
             const itemEditado = await Item.findByIdAndUpdate(id,{
                 descricao,
                 nome,
                 valor,
-                quantidade,
-                src
+                quantidade
             },
             {new:true})
     
